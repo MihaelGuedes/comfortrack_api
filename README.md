@@ -2,7 +2,7 @@
 
 ### Rode a infra necessária para execução da aplicação:
 
-docker-compose build -d
+docker-compose up -d
 
 ### Intale as dependências da aplicação:
 
