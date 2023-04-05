@@ -1,0 +1,23 @@
+pt-BR:
+  activerecord:
+    models:
+      user:
+        one: Usuario
+        other: Usuarios
+    attributes:
+      user:
+        first_name: Nome
+        last_name: Sobrenome
+        password: Senha
+        password_confirmation: Confirmação de senha
+        email: E-mail
+        user_type: Tipo de usuário
+  enum:
+    user:
+      user_type:
+        admin_user: 'Admin'
+        api_user: 'Api'
+      status:
+        inactive: Inativo
+        active: Ativo
+        blocked: Bloqueado

@@ -1,0 +1,28 @@
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  schema_search_path: "public"
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+ 
+
+development:
+  <<: *default
+  database: comfortrack_development
+  username: postgres
+  password: postgres
+  host: localhost
+
+test:
+  <<: *default
+  database: comfortrack_test<%= ENV['TEST_ENV_NUMBER'] %>
+  username: postgres
+  password: postgres
+  host: localhost
+
+
+# Ambiente production deve ser configurado com ENV['DATABASE_URL']
+production:
+  encoding: utf8
+  pool: 15
+  adapter: postgresql
+  schema_search_path: "public"

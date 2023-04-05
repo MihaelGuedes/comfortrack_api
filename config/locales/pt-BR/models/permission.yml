@@ -1,0 +1,11 @@
+pt-BR:
+  permissions:
+      user: "Administrar usuários"
+  activerecord:
+    models:
+      permission:
+        one: Permissão
+        other: Permissões de Usuário
+    attributes:
+      permission:
+        resource: Recurso
