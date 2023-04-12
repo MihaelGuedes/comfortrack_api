@@ -29,6 +29,18 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def only_user_tutor_access_resource
+    return if current_user.tutor?
+    
+    forbidden_error!
+  end
+
+  def only_user_admin_access_resource
+    return if current_user.admin?
+    
+    forbidden_error!
+  end
+
   private
 
   def current_user_email
