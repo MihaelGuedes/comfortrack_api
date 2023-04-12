@@ -9,6 +9,6 @@ class Collars::Update
   def call
     return @collar if @collar.update(name: @name)
 
-    @user.errors.each { |error| errors.add error.attribute, error.message }
+    @collar.errors.each { |error| errors.add error.attribute, error.message }
   end
 end
