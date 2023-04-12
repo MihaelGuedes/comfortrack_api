@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_05_163655) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_12_024019) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -32,11 +32,47 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_05_163655) do
     t.index ["permission_id"], name: "index_group_policy_permissions_on_permission_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.integer "type"
+    t.boolean "paid"
+    t.datetime "payday"
+    t.integer "status"
+    t.uuid "user_id"
+    t.bigint "plan_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_payments_on_plan_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "permissions", force: :cascade do |t|
     t.string "resource", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["resource"], name: "index_permissions_on_resource"
+  end
+
+  create_table "plans", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price"
+    t.integer "type_plan"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "months"
+  end
+
+  create_table "purchased_plans", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price"
+    t.integer "type_plan"
+    t.uuid "user_id"
+    t.boolean "promotion"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "months"
+    t.bigint "plan_id"
+    t.index ["plan_id"], name: "index_purchased_plans_on_plan_id"
+    t.index ["user_id"], name: "index_purchased_plans_on_user_id"
   end
 
   create_table "user_login_logs", force: :cascade do |t|
@@ -76,6 +112,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_05_163655) do
 
   add_foreign_key "group_policy_permissions", "group_policies"
   add_foreign_key "group_policy_permissions", "permissions"
+  add_foreign_key "payments", "plans"
+  add_foreign_key "payments", "users"
+  add_foreign_key "purchased_plans", "plans"
+  add_foreign_key "purchased_plans", "users"
   add_foreign_key "user_login_logs", "users"
   add_foreign_key "user_permissions", "permissions"
   add_foreign_key "user_permissions", "users"

@@ -24,3 +24,8 @@ User::Suporte.find_or_create_by!(name: 'Suporte User', email: 'suporte@comfortra
   user.password = 'teste1234'
 end
 
+Plan.find_or_create_by!(name: 'Básico', price: 0, type_plan: :basic, months: 0)
+Plan.find_or_create_by!(name: 'Ouro', price: 200, type_plan: :gold, months: 1)
+Plan.find_or_create_by!(name: 'Platina', price: 1000, type_plan: :platinum, months: 6)
+Plan.find_or_create_by!(name: 'Diamante', price: 1600, type_plan: :diamond, months: 12)
+
