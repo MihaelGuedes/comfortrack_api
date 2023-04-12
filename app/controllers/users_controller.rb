@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   skip_before_action :authenticate_request, only: [:create]
   authorize_resource :user, only: %i[index show update destroy]
   before_action :set_user, only: %i[show update destroy]
+  before_action :only_user_admin_access_resource
 
   def index
     @service = User::Index.call(api_params[:email], api_params[:name], api_params[:user_type])
