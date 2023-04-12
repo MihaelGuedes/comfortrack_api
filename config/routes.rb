@@ -19,4 +19,5 @@ Rails.application.routes.draw do
   post '/auth/login', to: 'authentications#authenticate_user'
 
   resources :users
+  resources :collars, only: %i[index update]
 end
