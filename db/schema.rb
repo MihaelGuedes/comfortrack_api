@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_12_024019) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_14_004903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "collars", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "last_latitude"
+    t.string "last_longitude"
+    t.uuid "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_collars_on_user_id"
+  end
 
   create_table "group_policies", force: :cascade do |t|
     t.string "name"
@@ -32,6 +42,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_024019) do
     t.index ["permission_id"], name: "index_group_policy_permissions_on_permission_id"
   end
 
+  create_table "orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.uuid "user_id"
+    t.string "tracking_code"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_orders_on_product_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "payments", force: :cascade do |t|
     t.integer "type"
     t.boolean "paid"
@@ -41,6 +62,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_024019) do
     t.bigint "plan_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "due_date"
+    t.string "card_holder"
+    t.string "card_number"
+    t.string "expiration_month"
+    t.string "expiration_year"
+    t.string "security_code"
     t.index ["plan_id"], name: "index_payments_on_plan_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
@@ -61,6 +88,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_024019) do
     t.integer "months"
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price"
+    t.text "description"
+    t.integer "product_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "purchased_plans", force: :cascade do |t|
     t.string "name"
     t.decimal "price"
@@ -71,6 +107,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_024019) do
     t.datetime "updated_at", null: false
     t.integer "months"
     t.bigint "plan_id"
+    t.integer "status"
+    t.date "due_date"
     t.index ["plan_id"], name: "index_purchased_plans_on_plan_id"
     t.index ["user_id"], name: "index_purchased_plans_on_user_id"
   end
@@ -107,11 +145,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_024019) do
     t.datetime "password_token_expiry"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "cep"
+    t.string "city"
+    t.string "address"
+    t.string "neighborhood"
+    t.string "complement"
+    t.integer "gender"
+    t.date "birth_date"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "collars", "users"
   add_foreign_key "group_policy_permissions", "group_policies"
   add_foreign_key "group_policy_permissions", "permissions"
+  add_foreign_key "orders", "products"
+  add_foreign_key "orders", "users"
   add_foreign_key "payments", "plans"
   add_foreign_key "payments", "users"
   add_foreign_key "purchased_plans", "plans"

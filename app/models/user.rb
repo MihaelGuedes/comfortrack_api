@@ -3,10 +3,16 @@
 # Table name: users
 #
 # *id*::                    <tt>uuid, not null, primary key</tt>
+# *address*::               <tt>string</tt>
 # *avatar*::                <tt>string</tt>
+# *birth_date*::            <tt>date</tt>
+# *cep*::                   <tt>string</tt>
+# *city*::                  <tt>string</tt>
+# *complement*::            <tt>string</tt>
 # *email*::                 <tt>string(200), not null, indexed</tt>
-# *first_name*::            <tt>string(100), not null</tt>
-# *last_name*::             <tt>string(100), not null</tt>
+# *gender*::                <tt>integer</tt>
+# *name*::                  <tt>string(100), not null</tt>
+# *neighborhood*::          <tt>string</tt>
 # *password_digest*::       <tt>string, not null</tt>
 # *password_reset_token*::  <tt>string</tt>
 # *password_token_expiry*:: <tt>datetime</tt>
@@ -29,7 +35,7 @@ class User < ApplicationRecord
   include Recoverable
 
   enum status: { active: 0, inactive: 1 }
-
+  enum gender: { male: 0, female: 1 }
   has_secure_password
 
   has_many :user_permissions, class_name: 'UserPermission', dependent: :destroy
@@ -42,6 +48,11 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 100 }
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP, on: :create }, uniqueness: true
   validates :user_type, presence: true, inclusion: { in: TYPES_USER }
+  validates :cep, presence: true, length: { minimum: 8, maximum: 8, if: -> { cep.present? } }
+  validates :city, presence: true
+  validates :neighborhood, presence: true
+  validates :gender, presence: true
+  validates :birth_date, presence: true
 
   before_validation :downcase_email, :strip_email
 
