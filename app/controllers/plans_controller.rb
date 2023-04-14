@@ -1,4 +1,5 @@
 class PlansController < ApplicationController
+  before_action :only_user_admin_access_resource, only: [:create, :update, :delete]
 
   def index
     plans = Plan.all.unscopped
