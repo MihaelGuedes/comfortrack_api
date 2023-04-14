@@ -20,5 +20,6 @@ Rails.application.routes.draw do
 
   resources :users
   resources :plans
+  resources :products
   resources :collars, only: %i[index create update]
 end
