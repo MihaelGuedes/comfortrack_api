@@ -9,11 +9,11 @@ class Collars::Create
 
   def call
     collar = Collar.new(
-      name: @name,
       code: @code,
       user_id: @user_id,
     )
 
+    collar.name = collar.id.split('-').first if collar.save
     return collar if collar.save
 
     collar.errors.each { |error| errors.add error.attribute, error.message }
