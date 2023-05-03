@@ -21,5 +21,10 @@ Rails.application.routes.draw do
   resources :users
   resources :plans
   resources :products
-  resources :collars, only: %i[index create update]
+  resources :collars
+
+  post '/payment', to: 'payment#payments'
+
+  post '/purchase_plan', to: 'purchased_plan#purchased'
+  post '/purchase_product', to: 'purchased_product#purchased'
 end
