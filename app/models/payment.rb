@@ -15,30 +15,26 @@
 # *type*::             <tt>integer</tt>
 # *created_at*::       <tt>datetime, not null</tt>
 # *updated_at*::       <tt>datetime, not null</tt>
-# *plan_id*::          <tt>bigint, not null, indexed</tt>
 # *user_id*::          <tt>uuid, indexed</tt>
 #
 # Indexes
 #
-#  index_payments_on_plan_id  (plan_id)
 #  index_payments_on_user_id  (user_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (plan_id => plans.id)
 #  fk_rails_...  (user_id => users.id)
 #--
 # == Schema Information End
 #++
 class Payment < ApplicationRecord
   belongs_to :user
-  belongs_to :plan
 
   enum type: { credit_card: 0, debit_card: 1  }
+  enum status: { approved: 0, dissaproved: 1  }
 
   has_secure_password :security_code
 
-  validates :paid, presence: true
   validates :payday, presence: true
   validates :type, presence: true
   validates :due_date, presence: true
@@ -47,6 +43,4 @@ class Payment < ApplicationRecord
   validates :expiration_month, presence: true
   validates :expiration_year, presence: true
   validates :security_code, presence: true
-
-  # TODO: inserir dados de pagamento
 end

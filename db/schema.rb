@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_14_004903) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_03_134510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -59,7 +59,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_14_004903) do
     t.datetime "payday"
     t.integer "status"
     t.uuid "user_id"
-    t.bigint "plan_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "due_date"
@@ -68,7 +67,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_14_004903) do
     t.string "expiration_month"
     t.string "expiration_year"
     t.string "security_code"
-    t.index ["plan_id"], name: "index_payments_on_plan_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
@@ -111,6 +109,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_14_004903) do
     t.date "due_date"
     t.index ["plan_id"], name: "index_purchased_plans_on_plan_id"
     t.index ["user_id"], name: "index_purchased_plans_on_user_id"
+  end
+
+  create_table "purchased_products", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price"
+    t.boolean "promotion"
+    t.integer "status"
+    t.integer "product_type"
+    t.bigint "product_id", null: false
+    t.uuid "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_purchased_products_on_product_id"
+    t.index ["user_id"], name: "index_purchased_products_on_user_id"
   end
 
   create_table "user_login_logs", force: :cascade do |t|
@@ -160,10 +172,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_14_004903) do
   add_foreign_key "group_policy_permissions", "permissions"
   add_foreign_key "orders", "products"
   add_foreign_key "orders", "users"
-  add_foreign_key "payments", "plans"
   add_foreign_key "payments", "users"
   add_foreign_key "purchased_plans", "plans"
   add_foreign_key "purchased_plans", "users"
+  add_foreign_key "purchased_products", "products"
+  add_foreign_key "purchased_products", "users"
   add_foreign_key "user_login_logs", "users"
   add_foreign_key "user_permissions", "permissions"
   add_foreign_key "user_permissions", "users"
