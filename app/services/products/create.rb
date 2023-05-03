@@ -1,12 +1,15 @@
 class Products::Create
   prepend SimpleCommand
 
-  def initialize(var_i:)
-    # colocar variaveis
-    @var_i = var_i
+  def initialize(params)
+    @params = params
   end
 
   def call
-    # criar um produto
+    product = Products.new(params)
+
+    return product if product.save
+
+    product.errors.each { |error| errors.add error.attribute, error.message }
   end
 end
